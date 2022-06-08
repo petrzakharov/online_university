@@ -28,6 +28,7 @@ class CreationForm(UserCreationForm):
             Submit(
                 "submit",
                 "Зарегистрироваться",
+
                 css_class="btn btn-primary btn-lg btn-block",
             ),
         )
