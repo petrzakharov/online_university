@@ -9,11 +9,20 @@ class User(AbstractUser):
         (2, 'teacher'),
     )
     age = models.PositiveIntegerField(
-        blank=True, validators=[MinValueValidator(17), MaxValueValidator(90)]
+        validators=[MinValueValidator(17), MaxValueValidator(90)],
+        blank=True,
+        null=True
     )
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'email']
-    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES)
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'email']
+    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, null=True, blank=True)
+    user_picture = models.ImageField(
+        'Фотография',
+        upload_to='user_pictures/',
+        blank=True
+    )
 
     def __str__(self):
         return self.username
+
+

@@ -1,6 +1,7 @@
+import datetime
+
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractUser
-from django.core.validators import MaxValueValidator
+from django.core.exceptions import ValidationError
 from django.db import models
 
 # todo Как сделать авторизацию по номеру телефона, например?
@@ -10,35 +11,124 @@ User = get_user_model()
 
 class StudentProfile(models.Model):
     user = models.OneToOneField(
-        'User', related_name='student_profile', on_delete=models.CASCADE
+        User, related_name='student_profile', on_delete=models.CASCADE
     )
-    # todo добавить photo юзера для студента и препода
+
+    def get_absolute_url(self):
+        pass
+        # return reverse('students', kwargs={'id': self.id})
+
+    def __str__(self):
+        return self.user.username
 
 
 class TeacherProfile(models.Model):
     user = models.OneToOneField(
-        'User', related_name='student_profile', on_delete=models.CASCADE
+        User, related_name='teacher_profile', on_delete=models.CASCADE
     )
-    is_phd = models.BooleanField()
-    degree = models.CharField(max_length=30)
+    is_phd = models.BooleanField(null=True, blank=True)
+    degree = models.CharField(max_length=30, null=True, blank=True)
     year_experience = models.PositiveIntegerField(
-        validators=[MaxValueValidator(30)]
+        null=True, blank=True
     )
-    # todo тут необходимо сделать проверку для поля year_experience не может быть больше, чем (возраст - 21)
+
+    def clean(self, *args, **kwargs):
+        if (self.year_experience + 18) > self.user.age:
+            raise ValidationError('Your experience must be less or equal than age - 18 year!')
+
+    def get_absolute_url(self):
+        pass
+        # return reverse('students', kwargs={'id': self.id}) https://fixmypc.ru/post/sozdanie-ssylok-metodom-get-absolute-v-python-django-3/
+
+    def __str__(self):
+        return self.user.username + '__with__' + str(self.year_experience) + '__experience'
 
 
 class CourseCategory(models.Model):
-    pass
+    CATEGORY_CHOICES = (
+        ('dev', 'Разработка'),
+        ('design', 'Дизайн'),
+        ('qa', 'Тестирование'),
+        ('analytics', 'Аналитика'),
+        ('management', 'Управление'),
+    )
+    title = models.CharField(choices=CATEGORY_CHOICES, max_length=50, unique=True)
+
+    def __str__(self):
+        return self.title
 
 
 class Course(models.Model):
-    pass
+    title = models.CharField(max_length=50, unique=True)
+    description = models.TextField(max_length=2000, unique=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    published_date = models.DateField(auto_now_add=True)
+    category = models.ForeignKey('CourseCategory', related_name='course', on_delete=models.PROTECT)
+    price = models.PositiveIntegerField()
+    student = models.ManyToManyField('StudentProfile', through='StudentCourse', related_name='courses')
+    teacher = models.ManyToManyField('TeacherProfile', through='TeacherCourse', related_name='courses')
+
+    def clean(self, *args, **kwargs):
+        if self.end_date < self.start_date:
+            raise ValidationError('End date must be greater than start date')
+        if self.published_date > self.start_date:
+            raise ValidationError('Start date must be greater than published date')
+
+    @property
+    def status(self):  # todo проверить property
+        today = datetime.date.today()
+        if today < self.start_date:
+            return 'planned'
+        elif self.start_date <= today <= self.end_date:
+            return 'active'
+        return 'over'
+
+    @property
+    def days_till_course(self):
+        return datetime.date.today() - self.start_date
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['-published_date']
+
+
+class StudentCourse(models.Model):
+    student = models.ForeignKey('StudentProfile', on_delete=models.CASCADE, related_name='student_course')
+    course = models.ForeignKey('Course', on_delete=models.CASCADE)
+    entry_date = models.DateField(auto_now_add=True)  # дата когда студент присоединился к курсу
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['student', 'course'], name='student_unique_courses'
+            ),
+        ]
+
+
+class TeacherCourse(models.Model):
+    teacher = models.ForeignKey('TeacherProfile', on_delete=models.CASCADE)
+    course = models.ForeignKey('Course', on_delete=models.CASCADE)
+    entry_date = models.DateField(auto_now_add=True)  # дата когда препод присоединился к курсу
+    count_lessons = models.PositiveIntegerField()  # количество уроков которые определённый перепод ведет на курсе
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['teacher', 'course'], name='teacher_unique_courses'
+            ),
+        ]
 
 
 class FavoriteTeachers(models.Model):
-    pass
+    student = models.ForeignKey('StudentProfile', on_delete=models.CASCADE, related_name='student_favorites_teachers')
+    teacher = models.ForeignKey('TeacherProfile', on_delete=models.CASCADE, related_name='teacher_followers')
 
-
-class Module(models.Model): # noqa будем считать количество прошедших модулей
-    pass
-
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['student', 'teacher'], name='unique_favorites_relation'
+            )
+        ]
