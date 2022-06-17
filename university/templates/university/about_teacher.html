@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+    <main class="container mt-3">
+        <div class="row">
+            <div class=" media">
+                <img src="https://this-person-does-not-exist.com/img/avatar-b463e460f30c2c7e17f49e2ca8cc458f.jpg"
+                     width="256" height="256" class="mr-3" alt="...">
+                <div class="media-body">
+                    <h5 class="mt-0">{{ object.user.last_name }} {{ object.user.first_name }}</h5>
+                    <p>Тут описание препода: {{ object.description }}</p>
+                    <p>Фолловеры:
+                        {% for follower in followers %} {{ follower.student.user.first_name }}{% endfor %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <section class="mt-5 pt-5">
+            <h2 class="h2 font-weight-normal text-center mb-5">Преподает на {{ object.courses_count }} курсах</h2>
+            <div class="row">
+                {% for cours in courses %}
+                    <div class="col-md-6 pt-5">
+                        <div class="card" style="width: 27rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ cours.title|slice:30 }}</h5>
+                                <p class="card-text">{{ cours.description|slice:80 }}...</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Категория: {{ cours.category }}</li>
+                                <li class="list-group-item">Записалось студентов:
+                                    {{ cours.student_count }}</li>
+                                <li class="list-group-item">Дата начала: {{ cours.start_date }}</li>
+                                <li class="list-group-item">Дата окончания: {{ cours.end_date }}</li>
+                                <li class="list-group-item">Стоимость: {{ cours.price }}</li>
+                            </ul>
+                            <div class="card-body">
+                                <a href="#" class="btn btn-primary">Поступить на курс</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+{% endblock %}

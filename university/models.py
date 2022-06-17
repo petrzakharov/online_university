@@ -27,7 +27,7 @@ class TeacherProfile(models.Model):
         User, related_name='teacher_profile', on_delete=models.CASCADE
     )
     is_phd = models.BooleanField(null=True, blank=True)
-    degree = models.CharField(max_length=30, null=True, blank=True)
+    description = models.CharField(max_length=30, null=True, blank=True)
     year_experience = models.PositiveIntegerField(
         null=True, blank=True
     )
@@ -38,10 +38,6 @@ class TeacherProfile(models.Model):
 
     def get_absolute_url(self):
         pass
-        # return reverse('students', kwargs={'id': self.id}) https://fixmypc.ru/post/sozdanie-ssylok-metodom-get-absolute-v-python-django-3/
-
-    def __str__(self):
-        return self.user.username + '__with__' + str(self.year_experience) + '__experience'
 
 
 class CourseCategory(models.Model):
@@ -63,7 +59,7 @@ class Course(models.Model):
     description = models.TextField(max_length=2000, unique=True)
     start_date = models.DateField()
     end_date = models.DateField()
-    published_date = models.DateField(auto_now_add=True)
+    published_date = models.DateField(blank=True)
     category = models.ForeignKey('CourseCategory', related_name='course', on_delete=models.PROTECT)
     price = models.PositiveIntegerField()
     student = models.ManyToManyField('StudentProfile', through='StudentCourse', related_name='courses')
@@ -72,11 +68,9 @@ class Course(models.Model):
     def clean(self, *args, **kwargs):
         if self.end_date < self.start_date:
             raise ValidationError('End date must be greater than start date')
-        if self.published_date > self.start_date:
-            raise ValidationError('Start date must be greater than published date')
 
     @property
-    def status(self):  # todo проверить property
+    def status(self):  # todo проверить property (вывести в шаблон)
         today = datetime.date.today()
         if today < self.start_date:
             return 'planned'

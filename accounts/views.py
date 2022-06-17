@@ -13,8 +13,8 @@ class Register(CreateView):
 
 class Login(LoginView):
     form_class = AuthForm
-    redirect_authenticated_user = True
     template_name = "login.html"
+    redirect_authenticated_user = True
 
 
 class Logout(LogoutView):

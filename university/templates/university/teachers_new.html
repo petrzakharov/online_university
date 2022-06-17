@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Наши преподаватели | Online university{% endblock %}
+{% block content %}
+    <main class="container mt-3 pb-5">
+        <div class="row mt-5">
+            {% for object in object_list %}
+                <div class="col-md-4 pt-4">
+                    <div class="card" style="width: 18rem;">
+                        <img class="card-img-top"
+                             src="https://this-person-does-not-exist.com/img/avatar-d5762cd219c67da730ac7b2b97eba801.jpg"
+                             alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ object.user.first_name }} {{ object.user.last_name }}</h5>
+                            <p class="card-text">{{ object.description|slice:30 }}</p>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Ведет курсов: {{ object.courses_count }}  </li>
+                            <li class="list-group-item">Количество фолловеров:
+                            {{ object.followers_count }}
+                            </li>
+                        </ul>
+                        <a href="{% url "teacher" object.id %}" class="btn btn-primary">Узнать больше о
+                            преподавателе</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+{% endblock %}

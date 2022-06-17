@@ -8,7 +8,7 @@ SECRET_KEY = 'django-insecure-igf*dtzcmxx3pq_-pk=dw7v6*!sii&s(e1x(zzzz11hgddx-g7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -17,12 +17,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'accounts',
     'university',
     'sorl.thumbnail',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -33,7 +36,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'conf.urls'
-
 
 TEMPLATES = [
     {
@@ -60,7 +62,6 @@ DATABASES = {
     }
 }
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -84,7 +85,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -92,3 +92,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.User'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+LOGIN_REDIRECT_URL = "/"
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]

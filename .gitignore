@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 .flake8
 media/
+.idea/

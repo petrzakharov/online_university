@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <main class="container mt-3">
+        <section>
+            <h3 class="h3 text-center mx-auto mt-4 pt-5" style="font-size: 70px;"><strong>
+                В ближайшие 30 дней стартует {{ object_list.count }} курсов
+            </strong></h3>
+           <div class="row">
+                {% for cours in object_list %}
+                    <div class="col-md-6 pt-5">
+                        <div class="card" style="width: 27rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ cours.title|slice:30 }}</h5>
+                                <p class="card-text">{{ cours.description|slice:80 }}...</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Категория: {{ cours.category }}</li>
+                                <li class="list-group-item">Преподаватели:
+                                    {% for teacher in cours.teacher.all %}
+                                         &#8226;<a href="{% url "teacher" teacher.id %}">{{ teacher.user.last_name }}</a>
+                                    {% endfor %}
+                                </li>
+                                <li class="list-group-item">Записалось студентов:
+                                    {{ cours.student_count }}</li>
+                                <li class="list-group-item">Дата начала: {{ cours.start_date }}</li>
+                                <li class="list-group-item">Дата окончания: {{ cours.end_date }}</li>
+                                <li class="list-group-item">Стоимость: {{ cours.price }}</li>
+                            </ul>
+                            <div class="card-body">
+                                <a href="#" class="btn btn-primary">Поступить на курс</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+{% endblock %}

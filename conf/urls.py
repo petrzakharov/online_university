@@ -6,11 +6,11 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("accounts.urls")),
-    # path("", include("university.urls")),
+    path("", include("university.urls")),
 ]
 
-
 if settings.DEBUG:
-    urlpatterns += static(
-        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
-    )
+    import debug_toolbar  # noqa
+
+    urlpatterns += (path("__debug__/", include("debug_toolbar.urls")),)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

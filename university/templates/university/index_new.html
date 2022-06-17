@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %} Главная | Online University{% endblock %}
+{% block content %}
+    {% load crispy_forms_tags %}
+    <main class="container mt-3">
+        <section>
+            <h1 class="h1 text-center mx-auto mt-4 py-5"><strong>Online university</strong></h1>
+            <div class="row">
+                <div class="col-12 col-md-8 col-lg-6 offset-lg-3 offset-md-2">
+                    <form class="form-inline mb-3" enctype="multipart/form-data" action=""
+                          method="get">
+                        <div class="form-group col-8 col-md-10 pl-0">
+                            <input class="form-control w-100" name="search" type="text"
+                                   placeholder="Найти курс" aria-label="Search">
+                        </div>
+                        <div class="form-group col-4 col-md-2 pl-0">
+                            <button class="btn btn-primary  w-100" type="submit">Найти</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <section class="mt-5 pt-5">
+            <h2 class="h2 font-weight-normal text-center mb-5">Популярные курсы</h2>
+            <div class="row">
+                {% for cours in courses %}
+                    <div class="col-md-6 pt-5">
+                        <div class="card" style="width: 27rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ cours.title|slice:30 }}</h5>
+                                <p class="card-text">{{ cours.description|slice:80 }}...</p>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">Категория: {{ cours.category }}</li>
+                                <li class="list-group-item">Преподаватели:
+                                    {% for teacher in cours.teacher.all %}
+                                         &#8226;<a href="{% url "teacher" teacher.id %}">{{ teacher.user.last_name }}</a>
+                                    {% endfor %}
+                                </li>
+                                <li class="list-group-item">Записалось студентов:
+                                    {{ cours.student_count }}</li>
+                                <li class="list-group-item">Дата начала: {{ cours.start_date }}</li>
+                                <li class="list-group-item">Дата окончания: {{ cours.end_date }}</li>
+                                <li class="list-group-item">Стоимость: {{ cours.price }}</li>
+                            </ul>
+                            <div class="card-body">
+                                <a href="#" class="btn btn-primary">Поступить на курс</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+{% endblock %}
+
