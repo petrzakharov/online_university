@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
+    <style>
+        .media-body {
+            margin-top: 50px;
+        }
+    </style>
     <main class="container mt-3">
         <div class="row">
             <div class=" media">
@@ -7,11 +12,12 @@
                      width="256" height="256" class="mr-3" alt="...">
                 <div class="media-body">
                     <h5 class="mt-0">{{ object.user.last_name }} {{ object.user.first_name }}</h5>
+                    <p>Возраст студента: {{ object.user.age }}</p>
                 </div>
             </div>
         </div>
         <section class="mt-5 pt-5">
-            <h2 class="h2 font-weight-normal text-center mb-5">Учится на {{ object.courses.count }} курсах</h2>
+            <h2 class="h2 font-weight-normal text-center mb-5">Учится на {{ object.courses_count }} курсах</h2>
             <div class="row">
                 {% for cours in object.courses.all %}
                     <div class="col-md-6 pt-5">

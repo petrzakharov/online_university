@@ -1,11 +1,11 @@
 import datetime
 
 from django.db.models import Count, Prefetch
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views.generic import TemplateView, ListView, DetailView, View, CreateView
 
 from .forms import TeacherProfileForm
-from .models import Course, TeacherProfile, FavoriteTeachers, StudentProfile, User
+from .models import Course, TeacherProfile, FavoriteTeachers, StudentProfile
 
 
 class Index(TemplateView):
@@ -74,38 +74,58 @@ class OneTeacher(DetailView):
         ).select_related('category').annotate(
             student_count=Count('student')
         ).all()
+        if FavoriteTeachers.objects.filter(student__user=self.request.user, teacher=self.kwargs['pk']).exists():
+            context['is_follow'] = True
         return context
-        # В шаблоне сделать ссылку на страницу со студентом
-        # Добавить больше подписчиков одному преподу, проверить что не увеличивается количество запросов
-        # В шаблоне убрать большой отступ между инфой с преподом и курсами
-        # Доавить больше инфы о преподе (is_phd, year_experience)
 
 
 class AddTeacherToFavorite(View):
-    def get(self, request, teacher_id):
-        student = StudentProfile.objects.get(user=self.request.user.id)
-        FavoriteTeachers.objects.get_or_create(teacher=teacher_id, student=student)
-        return redirect('teacher', pk=teacher_id)
-        # todo Менять текст после подписки - подписаться/отписаться, протестировать
-        # неавторизированный пользователь не может подписаться
+    def get(self, request, pk):
+        student = get_object_or_404(StudentProfile, user=self.request.user)
+        teacher = get_object_or_404(TeacherProfile, pk=pk)
+        FavoriteTeachers.objects.get_or_create(teacher=teacher, student=student)
+        return redirect('teacher', pk=pk)
 
-        # try:
-        #     obj = FavoriteTeachers.objects.get(
-        #         teacher=teacher_id, student=student
-        #     )
-        #     obj.delete()
-        #     button_text = 'Добавить в избранное'
-        # except FavoriteTeachers.DoesNotExist:
-        #     FavoriteTeachers.objects.сreate(
-        #         teacher=teacher_id, student=student
-        #     )
-        #     button_text = 'Удалить из избранного'
-        # context = {'button_text': button_text}
+
+class DeleteTeacherFromFavorite(View):
+    def get(self, request, pk):
+        student = get_object_or_404(StudentProfile, user=self.request.user)
+        teacher = get_object_or_404(TeacherProfile, pk=pk)
+        FavoriteTeachers.objects.filter(teacher=teacher, student=student).delete()
+        return redirect('teacher', pk=pk)
+
+        # После регистрации пользователя User с выбором типа пользователя должен создаваться в таблице StudentProfile
+        # - важно!
+        # неавторизированный пользователь не может подписаться (логин реквайред)
+        # запрет преподавателям подписываться на студентов
+        # преподам не отображать кнопку + пермишен
 
 
 class OneStudent(DetailView):
     model = StudentProfile
     template_name = 'university/about_student.html'
+    # ok
+
+    def get_queryset(self):
+        queryset = StudentProfile.objects.annotate(
+            courses_count=Count('courses')
+        ).select_related('user')
+        return queryset
+
+
+class JoinCourse(View):
+    def get(self, request, pk):
+        pass
+        # Создать связь
+        # Получить курс, получить студента
+
+
+class LeaveCourse(View):
+    def get(self, request, pk):
+        pass
+        # Удалить связь
+        # Получить курс, получить студента
+
 
 
 class MyProfile(View):

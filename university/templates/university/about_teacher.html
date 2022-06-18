@@ -1,5 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
+    <style>
+        .media-body {
+            margin-top: 50px;
+        }
+    </style>
     <main class="container mt-3">
         <div class="row">
             <div class=" media">
@@ -8,13 +13,27 @@
                 <div class="media-body">
                     <h5 class="mt-0">{{ object.user.last_name }} {{ object.user.first_name }}</h5>
                     <p>Тут описание препода: {{ object.description }}</p>
-                    <p>Фолловеры:
-                        {% for follower in followers %} {{ follower.student.user.first_name }}{% endfor %}
+                    <p>На преподавателя подписано {{ object.followers_count }} студентов:
+                        {% for follower in followers %}
+                            <a href="{% url "student" follower.student.id %}">
+                                {{ follower.student.user.first_name }}</a>
+                        {% endfor %}
                     </p>
+                    <p>
+                        Опыт преподавания: {{ object.year_experience }} лет;
+                        {% if object.is_phd %}
+                        Имеет докторскую степень;
+                        {% endif %}
+                    </p>
+                {% if is_follow %}
+                <a href="{% url "delete_teacher_from_favorite" object.id %}" class="btn btn-secondary">Отписаться</a>
+                {% else %}
+                <a href="{% url "add_teacher_to_favorite" object.id %}" class="btn btn-primary">Подписаться</a>
+                {% endif %}
                 </div>
             </div>
         </div>
-        <section class="mt-5 pt-5">
+        <section class="mt-1 pt-5">
             <h2 class="h2 font-weight-normal text-center mb-5">Преподает на {{ object.courses_count }} курсах</h2>
             <div class="row">
                 {% for cours in courses %}
