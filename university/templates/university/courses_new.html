@@ -3,11 +3,16 @@
 
     <main class="container mt-3">
         <section>
+            {% if not search_title %}
             <h3 class="h3 text-center mx-auto mt-4 pt-5" style="font-size: 70px;"><strong>
-                В ближайшие 30 дней стартует {{ object_list.count }} курсов
-            </strong></h3>
+                В ближайшие 30 дней стартует {{ courses.count }} курсов
+            </strong>
+            </h3>
+            {% else %}
+            <h3>{{ search_title }} </h3>
+            {% endif %}
            <div class="row">
-                {% for cours in object_list %}
+                {% for cours in courses %}
                     <div class="col-md-6 pt-5">
                         <div class="card" style="width: 27rem;">
                             <div class="card-body">
@@ -28,7 +33,13 @@
                                 <li class="list-group-item">Стоимость: {{ cours.price }}</li>
                             </ul>
                             <div class="card-body">
-                                <a href="#" class="btn btn-primary">Поступить на курс</a>
+                                {% if not cours.is_join_course %}
+                                    <a href="{% url "join_the_course" cours.id %}" class="btn btn-primary">Поступить на
+                                        курс </a>
+                                {% else %}
+                                    <a href="{% url "leave_the_course" cours.id %}" class="btn
+                                    btn-secondary">Покинуть курс </a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

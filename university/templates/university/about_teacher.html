@@ -52,7 +52,13 @@
                                 <li class="list-group-item">Стоимость: {{ cours.price }}</li>
                             </ul>
                             <div class="card-body">
-                                <a href="#" class="btn btn-primary">Поступить на курс</a>
+                                {% if not cours.is_join_course %}
+                                    <a href="{% url "join_the_course" cours.id %}" class="btn btn-primary">Поступить на
+                                        курс </a>
+                                {% else %}
+                                    <a href="{% url "leave_the_course" cours.id %}" class="btn
+                                    btn-secondary">Покинуть курс </a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

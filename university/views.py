@@ -1,23 +1,25 @@
 import datetime
 
-from django.db.models import Count, Prefetch
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count, Exists, OuterRef, Q
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
-from django.views.generic import TemplateView, ListView, DetailView, View, CreateView
+from django.views.generic import TemplateView, ListView, DetailView, View, UpdateView
 
 from .forms import TeacherProfileForm
-from .models import Course, TeacherProfile, FavoriteTeachers, StudentProfile
+from .models import Course, TeacherProfile, FavoriteTeachers, StudentProfile, StudentCourse
+from .utils import ContextForCourse
 
 
-class Index(TemplateView):
+class Index(ContextForCourse, TemplateView):
     template_name = 'university/index_new.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        teacher_user = TeacherProfile.objects.select_related('user')
-        context['courses'] = Course.objects.select_related('category').annotate(student_count=Count(
-            'student')).prefetch_related(Prefetch('teacher', queryset=teacher_user)).order_by('-student_count')
-         # Неплохо бы добавить пагинацию, остальное ок
+        context_courses = self.context_for_course()
+        context = dict(list(context_courses.items()) + list(context.items()))
         return context
+        # Неплохо бы добавить пагинацию, остальное ок
 
 
 class Teachers(ListView):
@@ -33,22 +35,15 @@ class Teachers(ListView):
         # добавить изображения в шаблоне, остальное ок
 
 
-class NearestCourses(ListView):
+class NearestCourses(ContextForCourse, TemplateView):
     template_name = 'university/courses_new.html'
-    allow_empty = True
 
-    def get_queryset(self):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         start_date, end_date = datetime.datetime.now(), datetime.datetime.now() + datetime.timedelta(days=30)
-        teacher_user = TeacherProfile.objects.select_related('user')
-        queryset = Course.objects.filter(
-            start_date__gte=start_date, start_date__lte=end_date
-        ).select_related('category').annotate(
-            student_count=Count('student')
-        ).prefetch_related(
-            Prefetch('teacher', queryset=teacher_user)
-        ).order_by('-start_date')
-        return queryset
-
+        context_courses = self.context_for_course(start_date=start_date, end_date=end_date)
+        context = dict(list(context_courses.items()) + list(context.items()))
+        return context
         # Было бы интересно сделать: вьюха принимает гет запрос с периодом дней за который надо вывести
         # курсы. Ссылка на эту вьюху есть на главной, "Стартует в ближайший месяц", "Стартует в ближайшие 2 месяца"
 
@@ -72,39 +67,46 @@ class OneTeacher(DetailView):
         context['courses'] = Course.objects.filter(
             teacher=TeacherProfile.objects.get(id=self.kwargs['pk'])
         ).select_related('category').annotate(
-            student_count=Count('student')
-        ).all()
-        if FavoriteTeachers.objects.filter(student__user=self.request.user, teacher=self.kwargs['pk']).exists():
+            student_count=Count('student'),
+            is_join_course=Exists(
+                StudentCourse.objects.filter(
+                    student=self.request.user.student_profile,
+                    course_id=OuterRef('pk')
+                )
+            )
+        )
+        if self.request.user.is_anonymous or FavoriteTeachers.objects.filter(
+                student__user=self.request.user,
+                teacher=self.kwargs['pk']
+        ).exists():
             context['is_follow'] = True
         return context
 
 
-class AddTeacherToFavorite(View):
+class AddTeacherToFavorite(LoginRequiredMixin, View):
     def get(self, request, pk):
         student = get_object_or_404(StudentProfile, user=self.request.user)
         teacher = get_object_or_404(TeacherProfile, pk=pk)
         FavoriteTeachers.objects.get_or_create(teacher=teacher, student=student)
         return redirect('teacher', pk=pk)
+        # разрешены только авторизованные пользователи-студенты, нужен пермишн
 
 
-class DeleteTeacherFromFavorite(View):
+class DeleteTeacherFromFavorite(LoginRequiredMixin, View):
     def get(self, request, pk):
         student = get_object_or_404(StudentProfile, user=self.request.user)
         teacher = get_object_or_404(TeacherProfile, pk=pk)
         FavoriteTeachers.objects.filter(teacher=teacher, student=student).delete()
         return redirect('teacher', pk=pk)
+        # разрешены только авторизованные пользователи-студенты, нужен пермишн
 
         # После регистрации пользователя User с выбором типа пользователя должен создаваться в таблице StudentProfile
-        # - важно!
-        # неавторизированный пользователь не может подписаться (логин реквайред)
-        # запрет преподавателям подписываться на студентов
-        # преподам не отображать кнопку + пермишен
+        # - важно! Сейчас этого не происходит автоматически.
 
 
 class OneStudent(DetailView):
     model = StudentProfile
     template_name = 'university/about_student.html'
-    # ok
 
     def get_queryset(self):
         queryset = StudentProfile.objects.annotate(
@@ -113,18 +115,62 @@ class OneStudent(DetailView):
         return queryset
 
 
-class JoinCourse(View):
+class JoinCourse(LoginRequiredMixin, View):
     def get(self, request, pk):
-        pass
-        # Создать связь
-        # Получить курс, получить студента
+        course = get_object_or_404(Course, pk=pk)
+        student = get_object_or_404(StudentProfile, user=self.request.user)
+        StudentCourse.objects.create(student=student, course=course)
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        # разрешены только авторизованные пользователи-студенты, нужен пермишн
+        # LoginRequiredMixin
 
 
-class LeaveCourse(View):
+class LeaveCourse(LoginRequiredMixin, View):
     def get(self, request, pk):
-        pass
-        # Удалить связь
-        # Получить курс, получить студента
+        course = get_object_or_404(Course, pk=pk)
+        student = get_object_or_404(StudentProfile, user=self.request.user)
+        StudentCourse.objects.filter(student=student, course=course).delete()
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+        # разрешены только авторизованные пользователи-студенты, нужен пермишн
+
+
+class SearchList(ContextForCourse, View):
+    template_name = 'university/courses_new.html'
+
+    def get(self, request):
+        query = self.request.GET.get("search")
+        if query:
+            q = (
+                Q(title__icontains=query)
+                | Q(description__icontains=query)
+                | Q(category__title__icontains=query)
+            )
+            context = self.context_for_course(q=q, search_title='Результаты поиска')
+            return render(request, self.template_name, context)
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
+
+
+class UpdateStudentProfile(LoginRequiredMixin, UpdateView):
+    pass
+
+
+# В зависимости от того имеет ли user StudentProfile или TeacherProfile в шаблоне base отображаем ссылку на нужную вьюху
+# UpdateStudentProfile(UpdateView): доступно по student_profile/
+    # Нужен пермишн - доступ только для студента
+    # В этой вьюхе одна форма - для модели User
+    # LoginRequiredMixin
+
+class UpdateTeacherProfile(LoginRequiredMixin, View):
+    pass
+# UpdateTeacherProfile(UpdateView/View): доступно по teacher_profile/
+    # Нужен пермишн доступ только для препода
+    # Как-то в этой вьюхе совместить 2 формы - User + TeacherProfile,
+    # возможно потребуется переписать на View
+    # LoginRequiredMixin
+
+
+
+
 
 
 
@@ -170,8 +216,3 @@ class MyProfile(View):
         # Обновляем форму
         # Подставляем в нее пользователя
         # Переадресовываем на саксесс пейдж
-
-
-class AddCourse(CreateView):
-    template_name = 'university/add_course.html'
-    form_class = 'asd'
