@@ -1,31 +1,24 @@
 from crispy_forms.bootstrap import FieldWithButtons, StrictButton
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Column, Layout, Row
+from crispy_forms.layout import Column, Layout, Row, Submit
 from django import forms
 
 from . import models
 
 
 class TeacherProfileForm(forms.ModelForm):
-    logo = forms.ImageField(
-        widget=forms.FileInput,
-    )
-
     class Meta:
         model = models.TeacherProfile
         fields = (
-            "user",
             "is_phd",
             "description",
             "year_experience",
         )
-        # labels = {
-        #     "name": "Название компании",
-        #     "location": "География",
-        #     "logo": "Логотип",
-        #     "description": "Информация о компании",
-        #     "employee_count": "Количество человек в компании",
-        # }
+        labels = {
+            "is_phd": "Есть ли докторская степень?",
+            "description": "Расскажите о вашем преподавательском опыте",
+            "year_experience": "Количество лет опыта",
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -33,38 +26,35 @@ class TeacherProfileForm(forms.ModelForm):
         self.helper.form_method = "post"
         self.helper.layout = Layout(
             Row(
-                Column("user"),
                 Column("is_phd"),
+                Column("year_experience"),
             ),
             Row(
                 Column("description"),
             ),
-            FieldWithButtons(
-                "year_experience",
-                StrictButton("Загрузить", type="submit", css_class="btn btn-info px-4"),
-            ),
+            Submit('Отправить', 'Submit', css_class='button'),
         )
 
 
-class CourseForm(forms.ModelForm):
+class UserForm(forms.ModelForm):
+    user_picture = forms.ImageField(
+        widget=forms.FileInput,
+    )
 
     class Meta:
-        model = models.Course
+        model = models.User
         fields = (
-            "title",
-            "description",
-            "start_date",
-            "end_date",
-            "category",
-            "price",
+            "user_picture",
+            "age",
+            "first_name",
+            "last_name",
         )
-        # labels = {
-        #     "name": "Название компании",
-        #     "location": "География",
-        #     "logo": "Логотип",
-        #     "description": "Информация о компании",
-        #     "employee_count": "Количество человек в компании",
-        # }
+        labels = {
+            "user_picture": "Ваша фотография",
+            "age": "Возраст",
+            "first_name": "Имя",
+            "last_name": "Фамилия",
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -72,11 +62,12 @@ class CourseForm(forms.ModelForm):
         self.helper.form_method = "post"
         self.helper.layout = Layout(
             Row(
-                Column("title"),
-                Column("description"),
-                Column("start_date"),
-                Column("end_date"),
-                Column("category"),
-                Column("price"),
+                Column("age"),
+                Column("first_name"),
+                Column("last_name"),
+            ),
+            FieldWithButtons(
+                "user_picture",
+                StrictButton("Загрузить", type="submit", css_class="btn btn-info px-4"),
             ),
         )

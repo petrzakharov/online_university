@@ -52,7 +52,8 @@
                                 Личный кабинет
                             </button>
                             <div class="dropdown-menu dropdown-menu-right mt-3">
-                                <a href="{% url "my_profile" %}" class="dropdown-item py-2">Мой профиль</a>
+                                <a href="{% url "user_profile" %}" class="dropdown-item py-2">Мой профиль</a>
+{#                                <a href="{% url "user_profile" %}" class="dropdown-item py-2">Мой профиль</a>#}
                                 <a href="{% url "logout" %}?next=/" class="dropdown-item py-2">Выйти</a>
                             </div>
                         </div>

@@ -1,0 +1,731 @@
+[
+{
+  "model": "university.studentprofile",
+  "pk": 186,
+  "fields": {
+    "user": 372
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 187,
+  "fields": {
+    "user": 373
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 188,
+  "fields": {
+    "user": 374
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 189,
+  "fields": {
+    "user": 375
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 190,
+  "fields": {
+    "user": 376
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 191,
+  "fields": {
+    "user": 377
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 192,
+  "fields": {
+    "user": 378
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 193,
+  "fields": {
+    "user": 379
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 194,
+  "fields": {
+    "user": 380
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 195,
+  "fields": {
+    "user": 381
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 196,
+  "fields": {
+    "user": 382
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 197,
+  "fields": {
+    "user": 383
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 198,
+  "fields": {
+    "user": 384
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 199,
+  "fields": {
+    "user": 385
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 200,
+  "fields": {
+    "user": 386
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 201,
+  "fields": {
+    "user": 406
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 202,
+  "fields": {
+    "user": 407
+  }
+},
+{
+  "model": "university.studentprofile",
+  "pk": 203,
+  "fields": {
+    "user": 408
+  }
+},
+{
+  "model": "university.teacherprofile",
+  "pk": 186,
+  "fields": {
+    "user": 387,
+    "is_phd": true,
+    "description": null,
+    "year_experience": 20
+  }
+},
+{
+  "model": "university.teacherprofile",
+  "pk": 187,
+  "fields": {
+    "user": 388,
+    "is_phd": true,
+    "description": null,
+    "year_experience": 20
+  }
+},
+{
+  "model": "university.teacherprofile",
+  "pk": 188,
+  "fields": {
+    "user": 389,
+    "is_phd": false,
+    "description": null,
+    "year_experience": 20
+  }
+},
+{
+  "model": "university.teacherprofile",
+  "pk": 189,
+  "fields": {
+    "user": 390,
+    "is_phd": false,
+    "description": null,
+    "year_experience": 20
+  }
+},
+{
+  "model": "university.teacherprofile",
+  "pk": 190,
+  "fields": {
+    "user": 391,
+    "is_phd": false,
+    "description": null,
+    "year_experience": 20
+  }
+},
+{
+  "model": "university.teacherprofile",
+  "pk": 191,
+  "fields": {
+    "user": 392,
+    "is_phd": false,
+    "description": null,
+    "year_experience": 20
+  }
+},
+{
+  "model": "university.teacherprofile",
+  "pk": 192,
+  "fields": {
+    "user": 393,
+    "is_phd": true,
+    "description": null,
+    "year_experience": 20
+  }
+},
+{
+  "model": "university.teacherprofile",
+  "pk": 193,
+  "fields": {
+    "user": 394,
+    "is_phd": false,
+    "description": null,
+    "year_experience": 20
+  }
+},
+{
+  "model": "university.teacherprofile",
+  "pk": 194,
+  "fields": {
+    "user": 395,
+    "is_phd": true,
+    "description": "<alkhalksdhlakhsdlhaldshlajhdl",
+    "year_experience": 20
+  }
+},
+{
+  "model": "university.teacherprofile",
+  "pk": 195,
+  "fields": {
+    "user": 396,
+    "is_phd": false,
+    "description": null,
+    "year_experience": 20
+  }
+},
+{
+  "model": "university.teacherprofile",
+  "pk": 196,
+  "fields": {
+    "user": 397,
+    "is_phd": false,
+    "description": null,
+    "year_experience": 20
+  }
+},
+{
+  "model": "university.teacherprofile",
+  "pk": 197,
+  "fields": {
+    "user": 398,
+    "is_phd": true,
+    "description": null,
+    "year_experience": 20
+  }
+},
+{
+  "model": "university.teacherprofile",
+  "pk": 198,
+  "fields": {
+    "user": 399,
+    "is_phd": false,
+    "description": null,
+    "year_experience": 20
+  }
+},
+{
+  "model": "university.teacherprofile",
+  "pk": 199,
+  "fields": {
+    "user": 400,
+    "is_phd": true,
+    "description": null,
+    "year_experience": 20
+  }
+},
+{
+  "model": "university.teacherprofile",
+  "pk": 200,
+  "fields": {
+    "user": 401,
+    "is_phd": true,
+    "description": null,
+    "year_experience": 20
+  }
+},
+{
+  "model": "university.teacherprofile",
+  "pk": 201,
+  "fields": {
+    "user": 409,
+    "is_phd": true,
+    "description": "Все норм!",
+    "year_experience": 30
+  }
+},
+{
+  "model": "university.coursecategory",
+  "pk": 31,
+  "fields": {
+    "title": "analytics"
+  }
+},
+{
+  "model": "university.coursecategory",
+  "pk": 32,
+  "fields": {
+    "title": "management"
+  }
+},
+{
+  "model": "university.coursecategory",
+  "pk": 33,
+  "fields": {
+    "title": "dev"
+  }
+},
+{
+  "model": "university.coursecategory",
+  "pk": 34,
+  "fields": {
+    "title": "qa"
+  }
+},
+{
+  "model": "university.coursecategory",
+  "pk": 35,
+  "fields": {
+    "title": "design"
+  }
+},
+{
+  "model": "university.course",
+  "pk": 31,
+  "fields": {
+    "title": "Product Smile Floor Simple Firm Forget",
+    "description": "Soon people important likely right. Image today stop nice he. Hit record baby section reality camera.",
+    "start_date": "2011-01-15",
+    "end_date": "2018-12-06",
+    "published_date": "2022-06-10",
+    "category": 31,
+    "price": 15000
+  }
+},
+{
+  "model": "university.course",
+  "pk": 32,
+  "fields": {
+    "title": "Personal Side Will Respond Hair Instead",
+    "description": "Different style national half challenge. Environmental where series report. Skill entire fish minute apply throughout miss.",
+    "start_date": "2000-02-22",
+    "end_date": "2016-02-22",
+    "published_date": "2022-06-10",
+    "category": 32,
+    "price": 20000
+  }
+},
+{
+  "model": "university.course",
+  "pk": 33,
+  "fields": {
+    "title": "Describe Anything Meet Brother Member Field",
+    "description": "Painting everything lose something when. Hospital reveal hit hundred radio character approach. Drive choose sometimes anything role entire.",
+    "start_date": "2019-08-13",
+    "end_date": "1991-08-06",
+    "published_date": "2022-06-10",
+    "category": 33,
+    "price": 30000
+  }
+},
+{
+  "model": "university.course",
+  "pk": 34,
+  "fields": {
+    "title": "Within Yeah See Nature Single Herself",
+    "description": "Still article reality so stand series than. Management term manager college. Boy along from federal heart someone.\r\nActually across but four.\r\nModern worry before should.",
+    "start_date": "2022-07-01",
+    "end_date": "2022-07-15",
+    "published_date": "2022-06-17",
+    "category": 34,
+    "price": 40000
+  }
+},
+{
+  "model": "university.course",
+  "pk": 35,
+  "fields": {
+    "title": "Small Fire Red Central Clearly Station",
+    "description": "Talk material manager fight bad government. Play coach commercial scientist.\r\nInto loss morning say arm center. Idea way public. Minute success professional director require.",
+    "start_date": "2022-07-19",
+    "end_date": "2022-12-15",
+    "published_date": "2022-06-10",
+    "category": 35,
+    "price": 50000
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 78,
+  "fields": {
+    "student": 186,
+    "course": 31,
+    "entry_date": "2022-06-10"
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 79,
+  "fields": {
+    "student": 187,
+    "course": 31,
+    "entry_date": "2022-06-10"
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 80,
+  "fields": {
+    "student": 188,
+    "course": 31,
+    "entry_date": "2022-06-10"
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 81,
+  "fields": {
+    "student": 189,
+    "course": 31,
+    "entry_date": "2022-06-10"
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 82,
+  "fields": {
+    "student": 190,
+    "course": 31,
+    "entry_date": "2022-06-10"
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 83,
+  "fields": {
+    "student": 191,
+    "course": 34,
+    "entry_date": "2022-06-10"
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 84,
+  "fields": {
+    "student": 192,
+    "course": 35,
+    "entry_date": "2022-06-10"
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 85,
+  "fields": {
+    "student": 193,
+    "course": 35,
+    "entry_date": "2022-06-10"
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 86,
+  "fields": {
+    "student": 194,
+    "course": 34,
+    "entry_date": "2022-06-10"
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 87,
+  "fields": {
+    "student": 195,
+    "course": 35,
+    "entry_date": "2022-06-10"
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 88,
+  "fields": {
+    "student": 196,
+    "course": 34,
+    "entry_date": "2022-06-10"
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 89,
+  "fields": {
+    "student": 197,
+    "course": 31,
+    "entry_date": "2022-06-10"
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 90,
+  "fields": {
+    "student": 198,
+    "course": 35,
+    "entry_date": "2022-06-10"
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 91,
+  "fields": {
+    "student": 199,
+    "course": 33,
+    "entry_date": "2022-06-10"
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 92,
+  "fields": {
+    "student": 200,
+    "course": 35,
+    "entry_date": "2022-06-10"
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 123,
+  "fields": {
+    "student": 203,
+    "course": 31,
+    "entry_date": "2022-06-22"
+  }
+},
+{
+  "model": "university.studentcourse",
+  "pk": 126,
+  "fields": {
+    "student": 203,
+    "course": 34,
+    "entry_date": "2022-06-22"
+  }
+},
+{
+  "model": "university.teachercourse",
+  "pk": 76,
+  "fields": {
+    "teacher": 186,
+    "course": 33,
+    "entry_date": "2022-06-10",
+    "count_lessons": 1
+  }
+},
+{
+  "model": "university.teachercourse",
+  "pk": 77,
+  "fields": {
+    "teacher": 187,
+    "course": 33,
+    "entry_date": "2022-06-10",
+    "count_lessons": 2
+  }
+},
+{
+  "model": "university.teachercourse",
+  "pk": 78,
+  "fields": {
+    "teacher": 188,
+    "course": 35,
+    "entry_date": "2022-06-10",
+    "count_lessons": 3
+  }
+},
+{
+  "model": "university.teachercourse",
+  "pk": 79,
+  "fields": {
+    "teacher": 189,
+    "course": 32,
+    "entry_date": "2022-06-10",
+    "count_lessons": 4
+  }
+},
+{
+  "model": "university.teachercourse",
+  "pk": 80,
+  "fields": {
+    "teacher": 190,
+    "course": 32,
+    "entry_date": "2022-06-10",
+    "count_lessons": 5
+  }
+},
+{
+  "model": "university.teachercourse",
+  "pk": 81,
+  "fields": {
+    "teacher": 191,
+    "course": 31,
+    "entry_date": "2022-06-10",
+    "count_lessons": 6
+  }
+},
+{
+  "model": "university.teachercourse",
+  "pk": 82,
+  "fields": {
+    "teacher": 192,
+    "course": 34,
+    "entry_date": "2022-06-10",
+    "count_lessons": 7
+  }
+},
+{
+  "model": "university.teachercourse",
+  "pk": 83,
+  "fields": {
+    "teacher": 193,
+    "course": 34,
+    "entry_date": "2022-06-10",
+    "count_lessons": 8
+  }
+},
+{
+  "model": "university.teachercourse",
+  "pk": 84,
+  "fields": {
+    "teacher": 194,
+    "course": 32,
+    "entry_date": "2022-06-10",
+    "count_lessons": 9
+  }
+},
+{
+  "model": "university.teachercourse",
+  "pk": 85,
+  "fields": {
+    "teacher": 195,
+    "course": 32,
+    "entry_date": "2022-06-10",
+    "count_lessons": 10
+  }
+},
+{
+  "model": "university.teachercourse",
+  "pk": 86,
+  "fields": {
+    "teacher": 196,
+    "course": 35,
+    "entry_date": "2022-06-10",
+    "count_lessons": 11
+  }
+},
+{
+  "model": "university.teachercourse",
+  "pk": 87,
+  "fields": {
+    "teacher": 197,
+    "course": 35,
+    "entry_date": "2022-06-10",
+    "count_lessons": 12
+  }
+},
+{
+  "model": "university.teachercourse",
+  "pk": 88,
+  "fields": {
+    "teacher": 198,
+    "course": 34,
+    "entry_date": "2022-06-10",
+    "count_lessons": 13
+  }
+},
+{
+  "model": "university.teachercourse",
+  "pk": 89,
+  "fields": {
+    "teacher": 199,
+    "course": 35,
+    "entry_date": "2022-06-10",
+    "count_lessons": 14
+  }
+},
+{
+  "model": "university.teachercourse",
+  "pk": 90,
+  "fields": {
+    "teacher": 200,
+    "course": 34,
+    "entry_date": "2022-06-10",
+    "count_lessons": 15
+  }
+},
+{
+  "model": "university.favoriteteachers",
+  "pk": 1,
+  "fields": {
+    "student": 196,
+    "teacher": 196
+  }
+},
+{
+  "model": "university.favoriteteachers",
+  "pk": 2,
+  "fields": {
+    "student": 198,
+    "teacher": 194
+  }
+},
+{
+  "model": "university.favoriteteachers",
+  "pk": 3,
+  "fields": {
+    "student": 188,
+    "teacher": 196
+  }
+},
+{
+  "model": "university.favoriteteachers",
+  "pk": 8,
+  "fields": {
+    "student": 201,
+    "teacher": 187
+  }
+},
+{
+  "model": "university.favoriteteachers",
+  "pk": 12,
+  "fields": {
+    "student": 203,
+    "teacher": 191
+  }
+}
+]

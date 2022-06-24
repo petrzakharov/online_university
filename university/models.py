@@ -4,8 +4,6 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
 
-# todo Как сделать авторизацию по номеру телефона, например?
-
 User = get_user_model()
 
 
@@ -16,7 +14,6 @@ class StudentProfile(models.Model):
 
     def get_absolute_url(self):
         pass
-        # return reverse('students', kwargs={'id': self.id})
 
     def __str__(self):
         return self.user.username
@@ -105,8 +102,8 @@ class StudentCourse(models.Model):
 class TeacherCourse(models.Model):
     teacher = models.ForeignKey('TeacherProfile', on_delete=models.CASCADE)
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
-    entry_date = models.DateField(auto_now_add=True)  # дата когда препод присоединился к курсу
-    count_lessons = models.PositiveIntegerField()  # количество уроков которые определённый перепод ведет на курсе
+    entry_date = models.DateField(auto_now_add=True)
+    count_lessons = models.PositiveIntegerField()
 
     class Meta:
         constraints = [

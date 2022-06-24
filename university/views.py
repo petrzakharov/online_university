@@ -4,15 +4,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Exists, OuterRef, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
+from django.urls import reverse_lazy
 from django.views.generic import TemplateView, ListView, DetailView, View, UpdateView
 
-from .forms import TeacherProfileForm
+from accounts.models import User
+from .forms import TeacherProfileForm, UserForm
 from .models import Course, TeacherProfile, FavoriteTeachers, StudentProfile, StudentCourse
 from .utils import ContextForCourse
 
 
 class Index(ContextForCourse, TemplateView):
-    template_name = 'university/index_new.html'
+    template_name = 'university/index.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -150,69 +152,34 @@ class SearchList(ContextForCourse, View):
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
 
-class UpdateStudentProfile(LoginRequiredMixin, UpdateView):
-    pass
+class UpdateUserProfile(LoginRequiredMixin, UpdateView):
+    login_url = "/login/"
+    form_class = UserForm
+    template_name = 'university/user_profile.html'
+    success_url = reverse_lazy("user_profile")
+    success_message = 'Обновлено'
 
+    def get_object(self, query_set=None):
+        return User.objects.get(pk=self.request.user.pk)
 
-# В зависимости от того имеет ли user StudentProfile или TeacherProfile в шаблоне base отображаем ссылку на нужную вьюху
+# Доступен и для студента и для препода
 # UpdateStudentProfile(UpdateView): доступно по student_profile/
-    # Нужен пермишн - доступ только для студента
     # В этой вьюхе одна форма - для модели User
     # LoginRequiredMixin
 
-class UpdateTeacherProfile(LoginRequiredMixin, View):
-    pass
+
+class UpdateTeacherProfile(LoginRequiredMixin, UpdateView):
+    login_url = "/login/"
+    form_class = TeacherProfileForm
+    template_name = 'university/user_profile.html'
+    success_url = reverse_lazy("teacher_profile")
+    success_message = 'Обновлено'
+
+    def get_object(self, query_set=None):
+        return TeacherProfile.objects.get(user=self.request.user)
+
 # UpdateTeacherProfile(UpdateView/View): доступно по teacher_profile/
     # Нужен пермишн доступ только для препода
     # Как-то в этой вьюхе совместить 2 формы - User + TeacherProfile,
     # возможно потребуется переписать на View
     # LoginRequiredMixin
-
-
-
-
-
-
-
-class MyProfile(View):
-
-    def user_type_for(self):
-        pass
-        # user_type, user_id = self.request.user.user_type, self.request.user.id
-        # if user_type == 'teacher':
-        #     form = TeacherProfileForm
-        # else:
-        #     form = StudentProfileForm
-
-    def get(self, request):
-        user_type, user_id = self.request.user.user_type, self.request.user.id
-        if user_type == 'teacher':
-            instance = TeacherProfile.objects.filter(user=self.request.user)
-            form = TeacherProfileForm(instance=instance)
-        # else:
-        #     instance = StudentProfile.objects.filter(user=self.request.user)
-        #     form = 'a'
-        form = TeacherProfileForm()
-        context = {'form': form}
-        return render(request, "university/my_profile.html", context)
-
-        # todo Тут нужно чтобы юзер мог обновить как модель Profile так и User, как это сделать
-
-    def post(self, request):
-        user_type, user_id = self.request.user.user_type, self.request.user.id
-        if user_type == 'teacher':
-            instance = TeacherProfile.objects.filter(user=self.request.user)
-            form = TeacherProfileForm(request.POST, instance=instance)
-
-        context = {'form': form}
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.company = request.user.company
-            instance.save()
-            context["status"] = "Вакансия обновлена"
-        else:
-            context["status"] = "Обновления не сохранены. Исправьте ошибки"
-        return render(request, "university/my_profile.html", context)
-        # Обновляем форму
-        # Подставляем в нее пользователя
-        # Переадресовываем на саксесс пейдж

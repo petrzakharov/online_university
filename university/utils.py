@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from django.db.models import Count, Prefetch, Exists, OuterRef
+from django.db.models import Count, Exists, Prefetch, OuterRef
 
 from university.models import TeacherProfile, Course, StudentCourse
 
@@ -10,7 +10,7 @@ def validate_teacher_year_experience(value):
 
 
 class ContextForCourse:
-    def context_for_course(self,  **kwargs):
+    def context_for_course(self, **kwargs):
         context = kwargs
         teacher_user = TeacherProfile.objects.select_related('user')
         if 'start_date' in context or 'end_date' in context:
@@ -25,7 +25,7 @@ class ContextForCourse:
         ).prefetch_related(
             Prefetch('teacher', queryset=teacher_user)
         ).order_by('-student_count')
-        if not self.request.user.is_anonymous:
+        if not self.request.user.is_anonymous and not len(TeacherProfile.objects.filter(user=self.request.user)):
             context['courses'] = context['courses'].annotate(
                 is_join_course=Exists(
                     StudentCourse.objects.filter(

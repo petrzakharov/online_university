@@ -21,11 +21,10 @@ urlpatterns = [
         views.DeleteTeacherFromFavorite.as_view(),
         name='delete_teacher_from_favorite'
     ),
-    path('student/<int:pk>/', views.OneStudent.as_view(), name='student'), #
-    path('my_profile/', views.MyProfile.as_view(), name='my_profile'),
+    path('student/<int:pk>/', views.OneStudent.as_view(), name='student'),
     path('course/<int:pk>/join/', views.JoinCourse.as_view(), name='join_the_course'),
     path('course/<int:pk>/leave/', views.LeaveCourse.as_view(), name='leave_the_course'),
     path('search/', views.SearchList.as_view(), name='search'),
-    path('student_profile/', views.UpdateStudentProfile.as_view(), name='student_profile'),
-    path('teacher_profile', views.UpdateTeacherProfile.as_view(), name='teacher_profile')
+    path('user_profile/', views.UpdateUserProfile.as_view(), name='user_profile'),
+    path('teacher_profile/', views.UpdateTeacherProfile.as_view(), name='teacher_profile')
 ]
