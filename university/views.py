@@ -1,7 +1,7 @@
 import datetime
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Count, Exists, OuterRef, Q
+from django.db.models import Count, Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
@@ -10,6 +10,7 @@ from django.views.generic import TemplateView, ListView, DetailView, View, Updat
 from accounts.models import User
 from .forms import TeacherProfileForm, UserForm
 from .models import Course, TeacherProfile, FavoriteTeachers, StudentProfile, StudentCourse
+from .permissions import OnlyForStudents, OnlyForTeachers
 from .utils import ContextForCourse
 
 
@@ -21,7 +22,6 @@ class Index(ContextForCourse, TemplateView):
         context_courses = self.context_for_course()
         context = dict(list(context_courses.items()) + list(context.items()))
         return context
-        # Неплохо бы добавить пагинацию, остальное ок
 
 
 class Teachers(ListView):
@@ -50,7 +50,8 @@ class NearestCourses(ContextForCourse, TemplateView):
         # курсы. Ссылка на эту вьюху есть на главной, "Стартует в ближайший месяц", "Стартует в ближайшие 2 месяца"
 
 
-class OneTeacher(DetailView):
+class OneTeacher(LoginRequiredMixin, ContextForCourse, DetailView):
+    login_url = '/login/'
     model = TeacherProfile
     template_name = 'university/about_teacher.html'
 
@@ -62,48 +63,34 @@ class OneTeacher(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        teacher = get_object_or_404(TeacherProfile, pk=self.kwargs['pk'])
         context['followers'] = FavoriteTeachers.objects.filter(
             teacher=self.kwargs['pk']
         ).select_related('student__user').all()
-
-        context['courses'] = Course.objects.filter(
-            teacher=TeacherProfile.objects.get(id=self.kwargs['pk'])
-        ).select_related('category').annotate(
-            student_count=Count('student'),
-            is_join_course=Exists(
-                StudentCourse.objects.filter(
-                    student=self.request.user.student_profile,
-                    course_id=OuterRef('pk')
-                )
-            )
-        )
         if self.request.user.is_anonymous or FavoriteTeachers.objects.filter(
                 student__user=self.request.user,
                 teacher=self.kwargs['pk']
         ).exists():
             context['is_follow'] = True
+        context_courses = self.context_for_course(teacher=teacher)
+        context = dict(list(context_courses.items()) + list(context.items()))
         return context
 
 
-class AddTeacherToFavorite(LoginRequiredMixin, View):
+class AddTeacherToFavorite(LoginRequiredMixin, OnlyForStudents, View):
     def get(self, request, pk):
         student = get_object_or_404(StudentProfile, user=self.request.user)
         teacher = get_object_or_404(TeacherProfile, pk=pk)
         FavoriteTeachers.objects.get_or_create(teacher=teacher, student=student)
         return redirect('teacher', pk=pk)
-        # разрешены только авторизованные пользователи-студенты, нужен пермишн
 
 
-class DeleteTeacherFromFavorite(LoginRequiredMixin, View):
+class DeleteTeacherFromFavorite(LoginRequiredMixin, OnlyForStudents, View):
     def get(self, request, pk):
         student = get_object_or_404(StudentProfile, user=self.request.user)
         teacher = get_object_or_404(TeacherProfile, pk=pk)
         FavoriteTeachers.objects.filter(teacher=teacher, student=student).delete()
         return redirect('teacher', pk=pk)
-        # разрешены только авторизованные пользователи-студенты, нужен пермишн
-
-        # После регистрации пользователя User с выбором типа пользователя должен создаваться в таблице StudentProfile
-        # - важно! Сейчас этого не происходит автоматически.
 
 
 class OneStudent(DetailView):
@@ -117,23 +104,24 @@ class OneStudent(DetailView):
         return queryset
 
 
-class JoinCourse(LoginRequiredMixin, View):
+class JoinCourse(LoginRequiredMixin, OnlyForStudents, View):
+    login_url = '/login/'
+
     def get(self, request, pk):
         course = get_object_or_404(Course, pk=pk)
         student = get_object_or_404(StudentProfile, user=self.request.user)
         StudentCourse.objects.create(student=student, course=course)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        # разрешены только авторизованные пользователи-студенты, нужен пермишн
-        # LoginRequiredMixin
 
 
-class LeaveCourse(LoginRequiredMixin, View):
+class LeaveCourse(LoginRequiredMixin, OnlyForStudents, View):
+    login_url = '/login/'
+
     def get(self, request, pk):
         course = get_object_or_404(Course, pk=pk)
         student = get_object_or_404(StudentProfile, user=self.request.user)
         StudentCourse.objects.filter(student=student, course=course).delete()
         return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
-        # разрешены только авторизованные пользователи-студенты, нужен пермишн
 
 
 class SearchList(ContextForCourse, View):
@@ -162,24 +150,13 @@ class UpdateUserProfile(LoginRequiredMixin, UpdateView):
     def get_object(self, query_set=None):
         return User.objects.get(pk=self.request.user.pk)
 
-# Доступен и для студента и для препода
-# UpdateStudentProfile(UpdateView): доступно по student_profile/
-    # В этой вьюхе одна форма - для модели User
-    # LoginRequiredMixin
 
-
-class UpdateTeacherProfile(LoginRequiredMixin, UpdateView):
+class UpdateTeacherProfile(LoginRequiredMixin, OnlyForTeachers, UpdateView):
     login_url = "/login/"
     form_class = TeacherProfileForm
     template_name = 'university/user_profile.html'
     success_url = reverse_lazy("teacher_profile")
-    success_message = 'Обновлено'
+    # success_message = 'Обновлено'
 
     def get_object(self, query_set=None):
         return TeacherProfile.objects.get(user=self.request.user)
-
-# UpdateTeacherProfile(UpdateView/View): доступно по teacher_profile/
-    # Нужен пермишн доступ только для препода
-    # Как-то в этой вьюхе совместить 2 формы - User + TeacherProfile,
-    # возможно потребуется переписать на View
-    # LoginRequiredMixin

@@ -42,7 +42,6 @@
                     <a class="nav-link" href="{% url "nearest_courses" %}">Ближайшие курсы</a>
                 </li>
             </ul>
-
             <ul class="navbar-nav col-2 justify-content-end">
                 <li class="nav-item active">
                     {% if user.is_authenticated %}
@@ -52,8 +51,10 @@
                                 Личный кабинет
                             </button>
                             <div class="dropdown-menu dropdown-menu-right mt-3">
-                                <a href="{% url "user_profile" %}" class="dropdown-item py-2">Мой профиль</a>
-{#                                <a href="{% url "user_profile" %}" class="dropdown-item py-2">Мой профиль</a>#}
+                                <a href="{% url "user_profile" %}" class="dropdown-item py-2">Профиль пользователя</a>
+                                {% if user.teacher_profile %}
+                                <a href="{% url "teacher_profile" %}" class="dropdown-item py-2">Профиль преподавателя</a>
+                                    {% endif %}
                                 <a href="{% url "logout" %}?next=/" class="dropdown-item py-2">Выйти</a>
                             </div>
                         </div>

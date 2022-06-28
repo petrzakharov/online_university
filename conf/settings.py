@@ -18,8 +18,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
-    'accounts',
-    'university',
+    'accounts.apps.AccountsConfig',
+    'university.apps.UniversityConfig',
     'sorl.thumbnail',
     'crispy_forms',
 ]
