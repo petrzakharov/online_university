@@ -67,7 +67,7 @@ class Course(models.Model):
             raise ValidationError('End date must be greater than start date')
 
     @property
-    def status(self):  # todo проверить property (вывести в шаблон)
+    def status(self):
         today = datetime.date.today()
         if today < self.start_date:
             return 'planned'
@@ -89,7 +89,7 @@ class Course(models.Model):
 class StudentCourse(models.Model):
     student = models.ForeignKey('StudentProfile', on_delete=models.CASCADE, related_name='student_course')
     course = models.ForeignKey('Course', on_delete=models.CASCADE)
-    entry_date = models.DateField(auto_now_add=True)  # дата когда студент присоединился к курсу
+    entry_date = models.DateField(auto_now_add=True)
 
     class Meta:
         constraints = [

@@ -8,11 +8,11 @@
     <main class="container mt-3">
         <div class="row">
             <div class=" media">
-                <img src="{{ object.user.user_picture }}"
+                <img src="{{ object.user.user_picture.url }}"
                      width="256" height="256" class="mr-3" alt="...">
                 <div class="media-body">
                     <h5 class="mt-0">{{ object.user.last_name }} {{ object.user.first_name }}</h5>
-                    <p>Тут описание препода: {{ object.description }}</p>
+                    <p>О преподавателе: {{ object.description }}</p>
                     <p>На преподавателя подписано {{ object.followers_count }} студентов:
                         {% for follower in followers %}
                             <a href="{% url "student" follower.student.id %}">

@@ -13,19 +13,9 @@ class Command(BaseCommand):
     ])
 
     def handle(self, *args, **options):
-        # teachers = mixer.cycle(8).blend(
-        #     'university.TeacherProfile', user__user_type=2, degree=mixer.FAKE, year_experience=20,
-        #     user__age=50, is_phd=mixer.RANDOM
-        #     # todo в идеале тут использовать изображения людей для аватарок, как?
-        # )
-        # students = mixer.cycle(20).blend(
-        #     'university.StudentProfile', user__user_type=1,
-        #     user__age=20
-        # )
         courses = mixer.cycle(5).blend(
              'university.Course',
             price=Command.prices,
-            #title=Command.titles #todo сделать тут уникальный выбор - функция и метод pop для списка
         )
         student_course = mixer.cycle(15).blend(
             'university.StudentCourse',
@@ -46,7 +36,3 @@ class Command(BaseCommand):
             student=mixer.SELECT,
             teacher=mixer.SELECT
         )
-
-
-
-
