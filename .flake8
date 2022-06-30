@@ -1,4 +1,5 @@
 [flake8]
+max-line-length = 120
 exclude =
     migrations
     __pycache__
@@ -6,3 +7,4 @@ exclude =
     settings.py
     env
     .env
+    venv

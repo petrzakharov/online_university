@@ -130,3 +130,4 @@ dmypy.json
 .flake8
 media/
 .idea/
+/venv/

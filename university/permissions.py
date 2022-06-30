@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
 
-from university.models import TeacherProfile, StudentProfile
+from university.models import StudentProfile, TeacherProfile
 
 
 class OnlyForStudents(UserPassesTestMixin):

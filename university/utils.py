@@ -1,7 +1,8 @@
 from django.core.exceptions import ValidationError
-from django.db.models import Count, Exists, Prefetch, OuterRef
+from django.db.models import Count, Exists, OuterRef, Prefetch
 
-from university.models import TeacherProfile, Course, StudentCourse, StudentProfile
+from university.models import (Course, StudentCourse, StudentProfile,
+                               TeacherProfile)
 
 
 def validate_teacher_year_experience(value):

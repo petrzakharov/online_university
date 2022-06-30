@@ -1,6 +1,8 @@
 from django.contrib import admin
 
-from university.models import *
+from university.models import (Course, CourseCategory, FavoriteTeachers,
+                               StudentCourse, StudentProfile, TeacherCourse,
+                               TeacherProfile, User)
 
 admin.site.register(User)
 admin.site.register(TeacherProfile)

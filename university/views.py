@@ -3,13 +3,16 @@ import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Q
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, ListView, DetailView, View, UpdateView
+from django.views.generic import (DetailView, ListView, TemplateView,
+                                  UpdateView, View)
 
 from accounts.models import User
+
 from .forms import TeacherProfileForm, UserForm
-from .models import Course, TeacherProfile, FavoriteTeachers, StudentProfile, StudentCourse
+from .models import (Course, FavoriteTeachers, StudentCourse, StudentProfile,
+                     TeacherProfile)
 from .permissions import OnlyForStudents, OnlyForTeachers
 from .utils import ContextForCourse
 
@@ -28,7 +31,7 @@ class Teachers(ListView):
     template_name = 'university/teachers_new.html'
     model = TeacherProfile
     allow_empty = True
-    
+
     def get_queryset(self):
         queryset = TeacherProfile.objects.select_related('user').annotate(
             courses_count=Count('courses'), followers_count=Count('teacher_followers')

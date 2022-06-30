@@ -2,7 +2,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from accounts.models import User
-from .models import TeacherProfile, StudentProfile
+
+from .models import StudentProfile, TeacherProfile
 
 
 @receiver(post_save, sender=User)  # sender - модель отправитель, # post_save - сигнал (при сохранении)
