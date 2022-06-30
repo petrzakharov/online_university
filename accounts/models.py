@@ -19,7 +19,8 @@ class User(AbstractUser):
     user_picture = models.ImageField(
         'Фотография',
         upload_to='user_pictures/',
-        blank=True
+        blank=True,
+        null=True
     )
 
     def __str__(self):

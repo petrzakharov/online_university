@@ -26,8 +26,12 @@ class URLTests(TestCase):
             category=course_category,
             price=20000,
         )
-        cls.user = User.objects.create_user(username='user123', user_type=1)
-        cls.user_teacher_type = User.objects.create_user(username='teacher123', user_type=2)
+        cls.user = User.objects.create_user(username='user123', user_type=1, user_picture='media/user_pictures/1.png')
+        cls.user_teacher_type = User.objects.create_user(
+            username='teacher123',
+            user_type=2,
+            user_picture='media/user_pictures/1.png'
+        )
         cls.teacher = TeacherProfile.objects.get(user=cls.user_teacher_type)
         cls.guest_client = Client()
         cls.authorized_client_user = Client()
@@ -72,7 +76,7 @@ class URLTests(TestCase):
                     "pk": URLTests.course.id
                 }
             ): HTTPStatus.FORBIDDEN.value,
-        }
+            }
 
         cls.user_urls = {
             reverse("index"): HTTPStatus.OK.value,
@@ -115,7 +119,7 @@ class URLTests(TestCase):
                     "pk": URLTests.course.id
                 }
             ): HTTPStatus.FOUND.value,
-        }
+            }
 
         cls.anon_urls = {
             reverse("index"): HTTPStatus.OK.value,
@@ -162,18 +166,18 @@ class URLTests(TestCase):
 
     def test_urls_for_teacher(self):
         for url, code in URLTests.teacher_urls.items():
-            with self.subTest():
+            with self.subTest(url):
                 response = URLTests.authorized_client_teacher.get(url)
                 self.assertEqual(response.status_code, code, url)
 
     def test_urls_for_user(self):
         for url, code in URLTests.user_urls.items():
-            with self.subTest():
+            with self.subTest(url):
                 response = URLTests.authorized_client_user.get(url)
                 self.assertEqual(response.status_code, code, url)
 
     def test_urls_for_anon(self):
         for url, code in URLTests.anon_urls.items():
-            with self.subTest():
+            with self.subTest(url):
                 response = URLTests.guest_client.get(url)
                 self.assertEqual(response.status_code, code, url)

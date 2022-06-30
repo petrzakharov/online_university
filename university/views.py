@@ -34,7 +34,6 @@ class Teachers(ListView):
             courses_count=Count('courses'), followers_count=Count('teacher_followers')
         )
         return queryset
-        # добавить изображения в шаблоне, остальное ок
 
 
 class NearestCourses(ContextForCourse, TemplateView):
@@ -46,8 +45,6 @@ class NearestCourses(ContextForCourse, TemplateView):
         context_courses = self.context_for_course(start_date=start_date, end_date=end_date)
         context = dict(list(context_courses.items()) + list(context.items()))
         return context
-        # Было бы интересно сделать: вьюха принимает гет запрос с периодом дней за который надо вывести
-        # курсы. Ссылка на эту вьюху есть на главной, "Стартует в ближайший месяц", "Стартует в ближайшие 2 месяца"
 
 
 class OneTeacher(LoginRequiredMixin, ContextForCourse, DetailView):
@@ -145,7 +142,6 @@ class UpdateUserProfile(LoginRequiredMixin, UpdateView):
     form_class = UserForm
     template_name = 'university/user_profile.html'
     success_url = reverse_lazy("user_profile")
-    success_message = 'Обновлено'
 
     def get_object(self, query_set=None):
         return User.objects.get(pk=self.request.user.pk)
@@ -156,7 +152,6 @@ class UpdateTeacherProfile(LoginRequiredMixin, OnlyForTeachers, UpdateView):
     form_class = TeacherProfileForm
     template_name = 'university/user_profile.html'
     success_url = reverse_lazy("teacher_profile")
-    # success_message = 'Обновлено'
 
     def get_object(self, query_set=None):
         return TeacherProfile.objects.get(user=self.request.user)
